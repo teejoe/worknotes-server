@@ -6,22 +6,29 @@
 <link rel="stylesheet" href="static/css/w3.css">
 
 <body>
+<div class="w3-container">
+  <h2 class="w3-display-topmiddle">Work notes</h2>
+  
+  <div class="w3-card-4 w3-third w3-display-middle">
+    <div class="w3-container w3-green">
+      <h2>Login</h2>
+    </div>
 
-<div class="w3-container w3-blue">
-  <h2>Login to work notes</h2>
+    <form name="login" method="post" action="/login" class="w3-container">
+      <p>
+      <label>Username</label></p>
+      <input name="username" class="w3-input" type="text">
+      <p>
+      <label>Password</label></p>
+      <input name="password" class="w3-input" type="password">
+      <p>     
+      <button type="submit" class="w3-button w3-block w3-green">Login</button>
+      <p class="w3-red">
+      {{ msg }}
+      </p>
+    </form>
+  </div>
 </div>
-
-<form class="w3-container w3-mobile" style="maxwidth:720">
-  <p>
-  <label>Username</label>
-  <input class="w3-input" type="text"></p>
-  <p>
-  <label>Password</label>
-  <input class="w3-input" type="text"></p>
-  <p>
-  <label>Email</label>
-  <input class="w3-input" type="text"></p>
-</form>
 
 </body>
 </html>

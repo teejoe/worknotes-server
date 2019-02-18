@@ -1,0 +1,7 @@
+# coding=utf8
+
+SECRET_KEY = b'_5#y2L"F5Q8z\n\xec]/'
+
+AUTH_USERS = [
+        {'username': 'hello', 'password': '123'},
+]

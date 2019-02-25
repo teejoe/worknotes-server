@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<title>Work notes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="static/css/w3.css">
+
+<body>
+
+<div class="w3-bar w3-green">
+  <a href="/index" class="w3-bar-item w3-button">Add Note</a>
+  <a href="/notelist" class="w3-bar-item w3-button w3-red">Notes List</a>
+  <a href="/logout" class="w3-bar-item w3-button w3-right">Logout</a>
+</div>
+
+<div class="w3-cell-row w3-margin" align="center">
+  <a class="w3-button w3-blue w3-margin" href="/weeklyreport">Weekly Report</a>
+  <a class="w3-button w3-blue w3-margin" href="/monthlyreport">Monthly Report</a>
+</div>
+
+<table class="w3-table">
+  <tr w3-blue>
+    <th>category</th>
+    <th>content</th>
+    <th>cost(day)</th>
+    <th>time</th>
+  </tr>
+  {% for n in notes %}
+  <tr>
+    <td>{{ n.category }}</td>
+    <td>{{ n.content }}</td>
+    <td>{{ n.cost }}</td>
+    <td>{{ n.time }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+</body>
+</html>

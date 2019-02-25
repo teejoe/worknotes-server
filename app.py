@@ -50,5 +50,27 @@ def addnote():
     logic.add_user_note(session['username'], note)
     return redirect(url_for('index'))
 
+@app.route('/notelist', methods=['GET', 'POST'])
+def notelist():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    notes = logic.get_all_notes(session['username'])
+    return render_template('notelist.html', notes=notes)
+
+@app.route('/weeklyreport', methods=['GET', 'POST'])
+def weeklyreport():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    return logic.get_weekly_report(session['username'])
+
+@app.route('/monthlyreport', methods=['GET', 'POST'])
+def monthlyreport():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    return logic.get_monthly_report(session['username'])
+
 if __name__ == "__main__":
     app.run()

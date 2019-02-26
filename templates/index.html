@@ -24,8 +24,9 @@
       <p>
       <label>Category</label></p>
       <select class="w3-select w3-border" name="category">
-        <option value="黑猪电竞Android端">黑猪电竞Android端</option>
-        <option value="黑猪电竞服务端">黑猪电竞服务端</option>
+        {% for c in categories %}
+        <option value="{{ c }}">{{ c }}</option>
+        {% endfor %}
       </select>
       <p>
       <label>Content</label></p>

@@ -5,6 +5,7 @@ from flask import session, redirect, url_for
 from etc.config import *
 from models import logic
 
+
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
@@ -14,6 +15,7 @@ def home():
         return redirect(url_for('index'))
 
     return render_template('login.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -26,17 +28,20 @@ def login():
 
     return render_template('login.html', msg="invalid user")
 
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
+
 
 @app.route('/index')
 def index():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    return render_template('index.html')
+    return render_template('index.html', categories=CATEGORIES)
+
 
 @app.route('/addnote', methods=['GET', 'POST'])
 def addnote():
@@ -50,13 +55,44 @@ def addnote():
     logic.add_user_note(session['username'], note)
     return redirect(url_for('index'))
 
+
 @app.route('/notelist', methods=['GET', 'POST'])
 def notelist():
     if 'username' not in session:
         return redirect(url_for('home'))
 
     notes = logic.get_all_notes(session['username'])
-    return render_template('notelist.html', notes=notes)
+    return render_template('notelist.html',
+            notes=notes,
+            categories=CATEGORIES)
+
+
+@app.route('/modifynote', methods=['POST'])
+def modifynote():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+    note = {
+        'id': request.form['note_id'],
+        'category': request.form['category'],
+        'content': request.form['content'],
+        'cost': request.form['cost'],
+    }
+    if logic.update_note(note):
+        return '{"code": 0}'
+    else:
+        return '{"code": -1}'
+
+
+@app.route('/deletenote', methods=['GET', 'POST'])
+def deletenote():
+    if 'username' not in session or not request.args.get('note_id'):
+        return '{"code": -1, "info": "param error"}'
+
+    if logic.delete_note(session['username'], request.args['note_id']):
+        return '{"code": 0}'
+    else:
+        return '{"code": -1}'
+
 
 @app.route('/weeklyreport', methods=['GET', 'POST'])
 def weeklyreport():
@@ -65,12 +101,14 @@ def weeklyreport():
 
     return logic.get_weekly_report(session['username'])
 
+
 @app.route('/monthlyreport', methods=['GET', 'POST'])
 def monthlyreport():
     if 'username' not in session:
         return redirect(url_for('home'))
 
     return logic.get_monthly_report(session['username'])
+
 
 if __name__ == "__main__":
     app.run()

@@ -11,6 +11,25 @@ _db = torndb.Connection(
         DB_CONFIG['user'],
         DB_CONFIG['password'])
 
+def delete_note(username, note_id):
+    sql, params = QS(T.worknotes).where(F.id == note_id).delete()
+    if not execute(sql, *params):
+        return False
+    return True
+
+
+def update_note(note):
+    sql, params = QS(T.worknotes).where(
+        F.id == note['id']
+    ).update({
+        'category': note['category'],
+        'content': note['content'],
+        'cost': note['cost']
+    })
+    if not execute(sql, *params):
+        return False
+    return True
+
 
 def add_note(username, note):
     sql, params = QS(T.worknotes).insert({
@@ -36,7 +55,9 @@ def get_notes(username = None, start_time = None, end_time = None, category = No
     if category != None:
         cond &= (F.category == category)
 
-    sql, params = QS(T.worknotes).where(cond).select()
+    sql, params = QS(T.worknotes).where(
+        cond
+    ).order_by(F.time, desc=True).select()
     return query(sql, *params)
 
 def _reconnect():

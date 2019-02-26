@@ -12,3 +12,8 @@ DB_CONFIG = {
         'user': 'tester',
         'password': 'test12345'
 }
+
+CATEGORIES = [
+        '黑猪电竞Android端',
+        '黑猪电竞服务端'
+]

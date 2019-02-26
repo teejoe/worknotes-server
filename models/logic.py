@@ -3,6 +3,15 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta, MO
 import db
 
+
+def update_note(note):
+    return db.update_note(note)
+
+
+def delete_note(username, note_id):
+    return db.delete_note(username, note_id)
+
+
 def add_user_note(username, note):
     return db.add_note(username, note)
 
@@ -45,7 +54,7 @@ def get_monthly_report(username):
         if category != n['category']:
             category = n['category']
             report += u"<br>%s<br>================<br>" % category
-        report += u"+ %s (%g天)<br>" % (n['content'], total_cost)
+        report += u"+ %s (%g天)<br>" % (n['content'], n['cost'])
         total_cost += n['cost']
     report += u"<br>总计: %g 天<br>" % total_cost
 

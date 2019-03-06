@@ -17,7 +17,9 @@ def add_user_note(username, note):
 
 
 def get_all_notes(username):
-    return db.get_notes(username)
+    end_time = datetime.now()
+    start_time = end_time - timedelta(days=30)
+    return db.get_notes(username, start_time, end_time)
 
 
 def get_weekly_report(username):
@@ -41,6 +43,15 @@ def get_weekly_report(username):
 
 def get_monthly_report(username):
     start_time, end_time = get_last_month()
+    return get_work_report(username, start_time, end_time)
+
+
+def get_this_week_report(username):
+    start_time, end_time = get_this_week()
+    return get_work_report(username, start_time, end_time)
+
+
+def get_work_report(username, start_time, end_time):
     notes = db.get_notes(username, start_time, end_time)
     notes = sorted(notes, key=lambda k: k['category'])
     report = u"%s ~ %s<br><br>" % (start_time, end_time)
@@ -57,7 +68,6 @@ def get_monthly_report(username):
         report += u"+ %s (%g天)<br>" % (n['content'], n['cost'])
         total_cost += n['cost']
     report += u"<br>总计: %g 天<br>" % total_cost
-
     return report
 
 
@@ -67,6 +77,14 @@ def get_last_week():
     last_monday = datetime.combine(last_monday, datetime.min.time())
     last_sunday = last_monday + timedelta(days=7)
     return last_monday, last_sunday
+
+
+def get_this_week():
+    today = date.today()
+    monday = today + relativedelta(weekday=MO(-1))
+    monday = datetime.combine(monday, datetime.min.time())
+    return monday, datetime.now()
+
 
 def get_last_month():
     end_time = date.today() + timedelta(days=1)

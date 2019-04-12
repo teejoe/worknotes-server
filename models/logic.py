@@ -1,6 +1,7 @@
 # encoding=utf8
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta, MO
+from dateutil import tz
 import db
 
 
@@ -19,7 +20,12 @@ def add_user_note(username, note):
 def get_all_notes(username):
     end_time = datetime.now()
     start_time = end_time - timedelta(days=30)
-    return db.get_notes(username, start_time, end_time)
+    notes = db.get_notes(username, start_time, end_time)
+    for note in notes:
+        note['time'] = note['time'].replace(
+            tzinfo=tz.gettz('UTC')
+        ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
+    return notes
 
 
 def get_weekly_report(username):

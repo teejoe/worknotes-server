@@ -52,6 +52,11 @@ def get_monthly_report(username):
     return get_work_report(username, start_time, end_time)
 
 
+def get_yearly_report(username):
+    start_time, end_time = get_last_year()
+    return get_work_report(username, start_time, end_time)
+
+
 def get_this_week_report(username):
     start_time, end_time = get_this_week()
     return get_work_report(username, start_time, end_time)
@@ -99,3 +104,10 @@ def get_last_month():
     end_time = datetime.combine(end_time, datetime.min.time())
     return start_time, end_time
 
+
+def get_last_year():
+    end_time = date.today()
+    start_time = end_time + relativedelta(years=-1)
+    start_time = datetime.combine(start_time, datetime.min.time())
+    end_time = datetime.combine(end_time, datetime.min.time())
+    return start_time, end_time

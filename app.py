@@ -110,6 +110,14 @@ def monthlyreport():
     return logic.get_monthly_report(session['username'])
 
 
+@app.route('/yearlyreport', methods=['GET', 'POST'])
+def yearlyreport():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    return logic.get_yearly_report(session['username'])
+
+
 @app.route('/thisweekreport', methods=['GET', 'POST'])
 def thisweekreport():
     if 'username' not in session:

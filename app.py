@@ -67,6 +67,17 @@ def notelist():
             categories=CATEGORIES)
 
 
+@app.route('/notebook', methods=['GET', 'POST'])
+def notebook():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    notes = logic.get_all_notes(session['username'])
+    return render_template('notebook.html',
+            notes=notes,
+            categories=CATEGORIES)
+
+
 @app.route('/modifynote', methods=['POST'])
 def modifynote():
     if 'username' not in session:

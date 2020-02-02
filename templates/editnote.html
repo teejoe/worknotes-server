@@ -13,14 +13,14 @@
 <form name="note" method="post" action="javascript:;" onsubmit="saveNote(this)" class="w3-container">
   <input name="note_id" style="display:none" value="{{ note.id }}"></input>
   <p><label>Category</label></p>
-  <input list="catlist" name="category" class="w3-input" type="text" value="{{ note.category }}"></input>
+  <input list="catlist" name="category" class="w3-input w3-border" type="text" value="{{ note.category }}"></input>
   <datalist id="catlist">
     {% for c in categories %}
     <option value="{{ c }}">{{ c }}</option>
     {% endfor %}
   </datalist>
   <p><label>Content</label></p>
-  <textarea name="content" class="w3-input" type="text" style="height:450px">{{ note.content }}</textarea>
+  <textarea name="content" class="w3-input w3-border" type="text" style="height:450px">{{ note.content }}</textarea>
   <div class="w3-cell-row w3-margin" align="center">
     <button type="submit" class="w3-button w3-green w3-margin" style="width:200px">Save</button>
   </div>

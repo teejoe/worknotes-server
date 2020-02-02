@@ -16,29 +16,24 @@
 </div>
 
 <div class="w3-cell-row w3-margin" align="center">
-  <a class="w3-button w3-blue w3-margin" href="/weeklyreport" target="_blank">Weekly Report</a>
-  <a class="w3-button w3-blue w3-margin" href="/monthlyreport" target="_blank">Monthly Report</a>
-  <a class="w3-button w3-blue w3-margin" href="/yearlyreport" target="_blank">Yearly Report</a>
-  <a class="w3-button w3-blue w3-margin" href="/thisweekreport" target="_blank">This Week Report</a>
+  <a class="w3-button w3-blue w3-margin" href="/editnote" target="_blank">+ New Note</a>
 </div>
 
 <table class="w3-table">
   <tr w3-blue>
     <th>category</th>
     <th>content</th>
-    <th>cost(day)</th>
     <th>time</th>
     <th>manage</th>
   </tr>
   {% for n in notes %}
   <tr id="note{{ n.id }}">
     <td>{{ n.category }}</td>
-    <td>{{ n.content }}</td>
-    <td>{{ n.cost }}</td>
+    <td><b>{{ n.title }}</b> <br> <i>{{ n.desc }}</i></td>
     <td>{{ n.time }}</td>
     <td>
-        <button onclick="onModifynote({{ n.id }}, '{{ n.category }}', '{{ n.content }}', {{ n.cost }})" class="w3-blue">Modify</button>
-      <button onclick="deletenote({{ n.id }})" class="w3-red">Delete</button>
+      <a href="/editnote?note_id={{ n.id }}" class="w3-button w3-blue" target="_blank">Modify</a>
+      <button onclick="deletenote({{ n.id }})" class="w3-button w3-red">Delete</button>
     </td>
   </tr>
   {% endfor %}
@@ -97,7 +92,7 @@ function modifyNote(form) {
         content: form.content.value,
         cost: form.cost.value
     };
-    $.post('/modifynote', data, function(data) {
+    $.post('/modifyworknote', data, function(data) {
         if (JSON.parse(data).code == 0) {
             var cells = document.getElementById(`note${noteId}`).cells;
             cells[0].innerHTML = form.category.value;

@@ -4,23 +4,47 @@ from dateutil.relativedelta import relativedelta, MO
 from dateutil import tz
 import db
 
-
 def update_note(note):
     return db.update_note(note)
-
 
 def delete_note(username, note_id):
     return db.delete_note(username, note_id)
 
-
-def add_user_note(username, note):
+def add_note(username, note):
     return db.add_note(username, note)
 
+def get_note(note_id):
+    return db.get_note(note_id)
 
 def get_all_notes(username):
     end_time = datetime.now()
-    start_time = end_time - timedelta(days=30)
+    start_time = end_time - timedelta(days=365)
     notes = db.get_notes(username, start_time, end_time)
+    for note in notes:
+        note['title'] = note['content'].partition('\n')[0]
+        note['desc'] = note['content'][:200]
+        note['time'] = note['time'].replace(
+            tzinfo=tz.gettz('UTC')
+        ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
+    return notes
+
+
+def update_worknote(note):
+    return db.update_worknote(note)
+
+
+def delete_worknote(username, note_id):
+    return db.delete_worknote(username, note_id)
+
+
+def add_user_worknote(username, note):
+    return db.add_worknote(username, note)
+
+
+def get_all_worknotes(username):
+    end_time = datetime.now()
+    start_time = end_time - timedelta(days=30)
+    notes = db.get_worknotes(username, start_time, end_time)
     for note in notes:
         note['time'] = note['time'].replace(
             tzinfo=tz.gettz('UTC')
@@ -30,7 +54,7 @@ def get_all_notes(username):
 
 def get_weekly_report(username):
     start_time, end_time = get_last_week()
-    notes = db.get_notes(username, start_time, end_time)
+    notes = db.get_worknotes(username, start_time, end_time)
     notes = sorted(notes, key=lambda k: k['category'])
     report = "%s ~ %s<br><br>" % (start_time, end_time)
     if len(notes) == 0:
@@ -63,7 +87,7 @@ def get_this_week_report(username):
 
 
 def get_work_report(username, start_time, end_time):
-    notes = db.get_notes(username, start_time, end_time)
+    notes = db.get_worknotes(username, start_time, end_time)
     notes = sorted(notes, key=lambda k: k['category'])
     report = u"%s ~ %s<br><br>" % (start_time, end_time)
     if len(notes) == 0:

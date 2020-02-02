@@ -8,3 +8,13 @@ CREATE TABLE IF NOT EXISTS `worknotes` (
   PRIMARY KEY (`id`),
   KEY `uname` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `notebook` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `content` MEDIUMTEXT DEFAULT NULL,
+  `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `uname` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

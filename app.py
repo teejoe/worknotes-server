@@ -43,8 +43,8 @@ def index():
     return render_template('index.html', categories=CATEGORIES)
 
 
-@app.route('/addnote', methods=['GET', 'POST'])
-def addnote():
+@app.route('/addworknote', methods=['GET', 'POST'])
+def addworknote():
     if 'username' not in session:
         return 'error'
 
@@ -52,7 +52,7 @@ def addnote():
     note['category'] = request.form['category']
     note['content'] = request.form['content']
     note['cost'] = float(request.form['cost'])
-    logic.add_user_note(session['username'], note)
+    logic.add_user_worknote(session['username'], note)
     return redirect(url_for('index'))
 
 
@@ -61,7 +61,7 @@ def notelist():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    notes = logic.get_all_notes(session['username'])
+    notes = logic.get_all_worknotes(session['username'])
     return render_template('notelist.html',
             notes=notes,
             categories=CATEGORIES)
@@ -78,8 +78,57 @@ def notebook():
             categories=CATEGORIES)
 
 
-@app.route('/modifynote', methods=['POST'])
-def modifynote():
+@app.route('/editnote', methods=['GET', 'POST'])
+def editnote():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    note_id = request.args.get('note_id')
+    note = {
+        'id': '',
+        'category': '',
+        'content': ''
+    }
+    if note_id is not None:
+        note = logic.get_note(int(note_id))
+    print note
+    return render_template('editnote.html', note=note, categories=NOTEBOOK_CATEGORY)
+
+
+@app.route('/savenote', methods=['POST'])
+def savenote():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+    note = {
+        'id': request.form.get('note_id'),
+        'category': request.form.get('category'),
+        'content': request.form.get('content')
+    }
+    if note['id']:
+        if logic.update_note(note):
+            return '{"code": 0}'
+        else:
+            return '{"code": 1}'
+    else:
+        if logic.add_note(session['username'], note):
+            return '{"code": 0}'
+        else:
+            return '{"code": 1}'
+          
+
+@app.route('/deletenote', methods=['GET', 'POST'])
+def deletenote():
+    if 'username' not in session or not request.args.get('note_id'):
+        return '{"code": -1, "info": "param error"}'
+
+    if logic.delete_note(session['username'], request.args['note_id']):
+        return '{"code": 0}'
+    else:
+        return '{"code": -1}'
+
+
+@app.route('/modifyworknote', methods=['POST'])
+def modifyworknote():
     if 'username' not in session:
         return redirect(url_for('home'))
     note = {
@@ -88,18 +137,18 @@ def modifynote():
         'content': request.form['content'],
         'cost': request.form['cost'],
     }
-    if logic.update_note(note):
+    if logic.update_worknote(note):
         return '{"code": 0}'
     else:
         return '{"code": -1}'
 
 
-@app.route('/deletenote', methods=['GET', 'POST'])
-def deletenote():
+@app.route('/deleteworknote', methods=['GET', 'POST'])
+def deleteworknote():
     if 'username' not in session or not request.args.get('note_id'):
         return '{"code": -1, "info": "param error"}'
 
-    if logic.delete_note(session['username'], request.args['note_id']):
+    if logic.delete_worknote(session['username'], request.args['note_id']):
         return '{"code": 0}'
     else:
         return '{"code": -1}'

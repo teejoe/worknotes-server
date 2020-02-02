@@ -38,7 +38,7 @@
     <td>{{ n.time }}</td>
     <td>
         <button onclick="onModifynote({{ n.id }}, '{{ n.category }}', '{{ n.content }}', {{ n.cost }})" class="w3-blue">Modify</button>
-      <button onclick="deletenote({{ n.id }})" class="w3-red">Delete</button>
+      <button onclick="deleteworknote({{ n.id }})" class="w3-red">Delete</button>
     </td>
   </tr>
   {% endfor %}
@@ -97,7 +97,7 @@ function modifyNote(form) {
         content: form.content.value,
         cost: form.cost.value
     };
-    $.post('/modifynote', data, function(data) {
+    $.post('/modifyworknote', data, function(data) {
         if (JSON.parse(data).code == 0) {
             var cells = document.getElementById(`note${noteId}`).cells;
             cells[0].innerHTML = form.category.value;
@@ -110,12 +110,12 @@ function modifyNote(form) {
     });
 }
 
-function deletenote(note_id) {
+function deleteworknote(note_id) {
     if (!confirm("delete note?")) {
         return;
     }
 
-    $.get(`/deletenote?note_id=${note_id}`, function(data) {
+    $.get(`/deleteworknote?note_id=${note_id}`, function(data) {
         if (JSON.parse(data).code == 0) {
             var item = document.getElementById(`note${note_id}`)
             item.style.display = 'none';

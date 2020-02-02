@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<title>Work notes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="static/css/w3.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<body>
+<div class="w3-bar w3-green">
+  <p class="w3-bar-item">Edit Note</p>
+</div>
+<form name="note" method="post" action="javascript:;" onsubmit="saveNote(this)" class="w3-container">
+  <input name="note_id" style="display:none" value="{{ note.id }}"></input>
+  <p><label>Category</label></p>
+  <input list="catlist" name="category" class="w3-input" type="text" value="{{ note.category }}"></input>
+  <datalist id="catlist">
+    {% for c in categories %}
+    <option value="{{ c }}">{{ c }}</option>
+    {% endfor %}
+  </datalist>
+  <p><label>Content</label></p>
+  <textarea name="content" class="w3-input" type="text" style="height:450px">{{ note.content }}</textarea>
+  <div class="w3-cell-row w3-margin" align="center">
+    <button type="submit" class="w3-button w3-green w3-margin" style="width:200px">Save</button>
+  </div>
+</form>
+
+<script>
+
+function saveNote(form) {
+  var data = {
+    note_id: form.note_id.value,
+    category: form.category.value,
+    content: form.content.value
+  };
+  $.post('/savenote', data, function(data) {
+    if (JSON.parse(data).code == 0) {
+      window.close();
+    } else {
+      alert(data);
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>

@@ -33,7 +33,7 @@
   {% for n in notes %}
   <tr id="note{{ n.id }}">
     <td>{{ n.category }}</td>
-    <td><b>{{ n.title }}</b> <br> <i>{{ n.desc }}</i></td>
+    <td><b>{{ n.title }}</b> <br> <pre>{{ n.desc }}</pre></td>
     <td>{{ n.time }}</td>
     <td>
       <a href="/editnote?note_id={{ n.id }}" class="w3-button w3-blue" target="_blank">Modify</a>

@@ -70,6 +70,18 @@ def get_notes(username = None, start_time = None, end_time = None, category = No
     return query(sql, *params)
 
 
+def search_notes(username = None, keyword = None):
+    cond = Condition('1 = 1')
+    if username:
+        cond &= (F.username == username)
+    if keyword:
+        keyword = '%' + keyword + '%'
+        cond &= ((F.content % keyword) | (F.category % keyword))
+
+    sql, params = QS(T.notebook).where(cond).order_by(F.time, desc=True).select()
+    return query(sql, *params)
+
+
 def delete_worknote(username, note_id):
     sql, params = QS(T.worknotes).where(F.id == note_id).delete()
     if not execute(sql, *params):

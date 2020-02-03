@@ -72,10 +72,14 @@ def notebook():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    notes = logic.get_all_notes(session['username'])
+    if request.args.get('keyword'):
+        notes = logic.search_notes(session['username'], request.args['keyword'])
+    else:
+        notes = logic.get_all_notes(session['username'])
     return render_template('notebook.html',
             notes=notes,
-            categories=CATEGORIES)
+            categories=CATEGORIES,
+            keyword=request.args.get('keyword') or '')
 
 
 @app.route('/editnote', methods=['GET', 'POST'])

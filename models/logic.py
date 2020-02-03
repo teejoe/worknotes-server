@@ -29,6 +29,17 @@ def get_all_notes(username):
     return notes
 
 
+def search_notes(username, keyword):
+    notes = db.search_notes(username, keyword)
+    for note in notes:
+        note['title'] = note['content'].partition('\n')[0]
+        note['desc'] = note['content'][:200]
+        note['time'] = note['time'].replace(
+            tzinfo=tz.gettz('UTC')
+        ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
+    return notes
+
+
 def update_worknote(note):
     return db.update_worknote(note)
 

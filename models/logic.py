@@ -135,6 +135,7 @@ def get_this_week():
 def get_last_month():
     end_time = date.today() + timedelta(days=1)
     start_time = end_time + relativedelta(months=-1)
+    #start_time = datetime.strptime('01/08/20 00:00:00', '%m/%d/%y %H:%M:%S')
     start_time = datetime.combine(start_time, datetime.min.time())
     end_time = datetime.combine(end_time, datetime.min.time())
     return start_time, end_time

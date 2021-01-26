@@ -54,8 +54,17 @@ def add_user_worknote(username, note):
 
 def get_all_worknotes(username):
     end_time = datetime.now()
-    start_time = end_time - timedelta(days=30)
+    start_time = end_time - timedelta(days=60)
     notes = db.get_worknotes(username, start_time, end_time)
+    for note in notes:
+        note['time'] = note['time'].replace(
+            tzinfo=tz.gettz('UTC')
+        ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
+    return notes
+
+
+def search_work_notes(username, keyword):
+    notes = db.search_worknotes(username, keyword)
     for note in notes:
         note['time'] = note['time'].replace(
             tzinfo=tz.gettz('UTC')

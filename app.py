@@ -61,7 +61,10 @@ def notelist():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    notes = logic.get_all_worknotes(session['username'])
+    if request.args.get('keyword'):
+        notes = logic.search_work_notes(session['username'], request.args['keyword'])
+    else:
+        notes = logic.get_all_worknotes(session['username'])
     return render_template('notelist.html',
             notes=notes,
             categories=CATEGORIES)

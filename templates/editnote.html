@@ -10,7 +10,7 @@
 <div class="w3-bar w3-green">
   <p class="w3-bar-item">Edit Note</p>
 </div>
-<form name="note" method="post" action="javascript:;" onsubmit="saveNote(this)" class="w3-container">
+<form id="noteform" name="note" method="post" action="javascript:;" onsubmit="submitNote(this)" class="w3-container">
   <input name="note_id" style="display:none" value="{{ note.id }}"></input>
   <p><label>Category</label></p>
   <input list="catlist" name="category" class="w3-input w3-border" type="text" value="{{ note.category }}"></input>
@@ -25,8 +25,25 @@
     <button type="submit" class="w3-button w3-green w3-margin" style="width:200px">Save And Close</button>
   </div>
 </form>
-
+  <div class="w3-cell-row w3-margin" align="center">
+    <button onclick="saveNote(document.getElementById('noteform'))" class="w3-button w3-green w3-margin" style="width:200px">Save</button>
+  </div>
 <script>
+
+function submitNote(form) {
+  var data = {
+    note_id: form.note_id.value,
+    category: form.category.value,
+    content: form.content.value
+  };
+  $.post('/savenote', data, function(data) {
+    if (JSON.parse(data).code == 0) {
+      window.close();
+    } else {
+      alert(data);
+    }
+  });
+}
 
 function saveNote(form) {
   var data = {
@@ -36,7 +53,7 @@ function saveNote(form) {
   };
   $.post('/savenote', data, function(data) {
     if (JSON.parse(data).code == 0) {
-      window.close();
+      console.log("save success");
     } else {
       alert(data);
     }

@@ -15,12 +15,18 @@
   <a href="/logout" class="w3-bar-item w3-button w3-right">Logout</a>
 </div>
 
-<div class="w3-cell-row w3-margin" align="center">
+<div class="w3-bar w3-margin">
   <a class="w3-button w3-blue w3-margin" href="/weeklyreport" target="_blank">Weekly Report</a>
   <a class="w3-button w3-blue w3-margin" href="/monthlyreport" target="_blank">Monthly Report</a>
   <a class="w3-button w3-blue w3-margin" href="/yearlyreport" target="_blank">Yearly Report</a>
   <a class="w3-button w3-blue w3-margin" href="/thisweekreport" target="_blank">This Week Report</a>
+
+  <div class="w3-bar-item w3-bar w3-right">
+    <input id="searchbox" value="{{ keyword }}" class="w3-bar-item w3-input w3-border w3-margin" style="width:200px"></input>
+    <button id="searchbtn" onclick="onSearch()" class="w3-bar-item w3-button w3-blue w3-margin">Search</button>
+  </div>
 </div>
+
 
 <table class="w3-table">
   <tr w3-blue>
@@ -75,6 +81,12 @@
 </table>
 
 <script>
+document.getElementById(`searchbox`).addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById(`searchbtn`).click();
+    }
+});
 function onModifynote(noteId, category, content, cost) {
     document.getElementById('modifydlg').style.display = 'block';
     document.getElementById('modifyid').value = noteId;
@@ -123,6 +135,12 @@ function deleteworknote(note_id) {
             alert(data);
         }
     });
+}
+
+function onSearch() {
+  var item = document.getElementById(`searchbox`);
+  var keyword = item.value;
+  window.location.href = `/notelist?keyword=${keyword}`;
 }
 </script>
 

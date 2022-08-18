@@ -12,6 +12,55 @@ _db = torndb.Connection(
         DB_CONFIG['user'],
         DB_CONFIG['password'])
 
+def update_todo(todo):
+    sql, params = QS(T.todolist).where(
+        F.id == todo['id']
+    ).update({
+        'category': todo['category'],
+        'content': todo['content'],
+        'status': todo['status'],
+        'priority': todo['priority'],
+        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    })
+    if not execute(sql, *params):
+        return False
+    return True
+
+
+def add_todo(username, todo):
+    sql, params = QS(T.todolist).insert({
+        'username': username,
+        'category': todo['category'],
+        'content': todo['content'],
+        'status': todo['status'],
+        'priority': todo['priority'],
+        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    })
+    if not execute(sql, *params):
+        return False
+    return True
+
+def delete_todo(todo_id):
+    sql, params = QS(T.todolist).where(F.id == todo_id).delete()
+    if not execute(sql, *params):
+        return False
+    return True
+
+def get_todolist(username = None, category = None, status = None):
+    cond = Condition('1 = 1')
+    if username != None:
+        cond &= (F.username == username)
+    if category != None:
+        cond &= (F.category == category)
+    if status != None:
+        cond &= (F.status == status)
+
+    sql, params = QS(T.todolist).where(
+        cond
+    ).order_by(F.updatetime, desc=True).select()
+    return query(sql, *params)
+
+
 def delete_note(username, note_id):
     sql, params = QS(T.notebook).where(F.id == note_id).delete()
     if not execute(sql, *params):

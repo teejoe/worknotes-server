@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<title>TodoList</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="static/css/w3.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<body>
+
+<div class="w3-bar w3-green">
+  <a href="/index" class="w3-bar-item w3-button">Add Note</a>
+  <a href="/notelist" class="w3-bar-item w3-button">Notes List</a>
+  <a href="/notebook" class="w3-bar-item w3-button">Notebook</a>
+  <a href="/todolist" class="w3-bar-item w3-button w3-red">TodoList</a>
+  <a href="/logout" class="w3-bar-item w3-button w3-right">Logout</a>
+</div>
+
+<div class="w3-bar w3-margin">
+  <button onclick="onAddtodo()" class="w3-bar-item w3-button w3-blue">+New Todo</button>
+</div>
+
+
+<table class="w3-table">
+  <tr w3-blue>
+    <th>category</th>
+    <th>content</th>
+    <th>priority</th>
+    <th>status</th>
+    <th>updatetime</th>
+    <th>manage</th>
+  </tr>
+  {% for n in todos %}
+  <tr id="todo{{ n.id }}">
+    <td>{{ n.category }}</td>
+    <td>{{ n.content }}</td>
+    <td>{{ n.priority }}</td>
+    <td>{{ n.status }}</td>
+    <td>{{ n.updatetime }}</td>
+    <td>
+      <button onclick="onModifytodo({{ n.id }}, '{{ n.category }}', '{{ n.content }}', {{ n.priority }}, '{{ n.status }}')" class="w3-blue">Modify</button>
+      <button onclick="deletetodo({{ n.id }})" class="w3-red">Delete</button>
+    </td>
+  </tr>
+  {% endfor %}
+
+  <div id="modifydlg" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-card-4">
+        <div class="w3-container w3-green">
+          <h2 id="modifydlgtitle">Modify todo</h2>
+        </div>
+        <span onclick="document.getElementById('modifydlg').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <input id="modifyid" name="id" style="display:none"></input>
+        <form id="modifyform" name="todo" method="post" action="javascript:;" onsubmit="modifyTodo(this)" class="w3-container w3-padding-large">
+          <p>
+          <label>Category</label></p>
+          <select id="modifycategory" class="w3-select w3-border" name="category">
+            {% for c in categories %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+          <p>
+          <label>Content</label></p>
+          <input id="modifycontent" name="content" class="w3-input" type="text">
+          <p>
+          <label>Priority</label></p>
+          <input id="modifypriority" name="priority" value="1" class="w3-input" type="number" step="1" min="0">
+          <p>
+          <label>Status</label></p>
+          <select id="modifystatus" class="w3-select w3-border" name="status">
+            <option value="new">new</option>
+            <option value="inprogress">inprogress</option>
+            <option value="done">done</option>
+            <option value="abort">abort</option>
+          </select>
+          <button type="submit" class="w3-button w3-block w3-green">Submit</button>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</table>
+
+<script>
+
+function onAddtodo() {
+    document.getElementById('modifydlgtitle').innerHTML = 'Add todo';
+    document.getElementById('modifydlg').style.display = 'block';
+    document.getElementById('modifyid').value = "";
+    document.getElementById('modifycontent').value = "";
+    document.getElementById('modifypriority').value = 1;
+    document.getElementById('modifystatus').selectedIndex = 0;
+}
+
+function onModifytodo(todoId, category, content, priority, status) {
+    document.getElementById('modifydlgtitle').innerHTML = 'Modify todo';
+    document.getElementById('modifydlg').style.display = 'block';
+    document.getElementById('modifyid').value = todoId;
+    document.getElementById('modifycontent').value = content;
+    document.getElementById('modifypriority').value = priority;
+    document.getElementById('modifystatus').value = status;
+    var index = 0;
+    {% for c in categories %}
+    if ('{{ c }}' == category) {
+        index = {{ loop.index }} - 1;
+    }
+    {% endfor %}
+    document.getElementById('modifycategory').selectedIndex = index;
+}
+
+function modifyTodo(form) {
+    todoId = document.getElementById('modifyid').value;
+    if (todoId == "") {
+        var data = {
+            category: form.category.value,
+            content: form.content.value,
+            priority: form.priority.value,
+            status: form.status.value
+        }
+        $.post('/savetodo', data, function(data) {
+            if (JSON.parse(data).code == 0) {
+                document.getElementById('modifydlg').style.display = 'none';
+                location.reload();
+            } else {
+                alert(data);
+            }
+        });
+        return;
+    }
+
+    var data = {
+        todo_id: todoId,
+        category: form.category.value,
+        content: form.content.value,
+        priority: form.priority.value,
+        status: form.status.value
+    };
+    $.post('/savetodo', data, function(data) {
+        if (JSON.parse(data).code == 0) {
+            var cells = document.getElementById(`todo${todoId}`).cells;
+            cells[0].innerHTML = form.category.value;
+            cells[1].innerHTML = form.content.value;
+            cells[2].innerHTML = form.priority.value;
+            cells[3].innerHTML = form.status.value;
+            document.getElementById('modifydlg').style.display = 'none';
+        } else {
+            alert(data);
+        }
+    });
+}
+
+function deletetodo(todo_id) {
+    if (!confirm("delete item?")) {
+        return;
+    }
+
+    $.get(`/deletetodo?todo_id=${todo_id}`, function(data) {
+        if (JSON.parse(data).code == 0) {
+            var item = document.getElementById(`todo${todo_id}`)
+            item.style.display = 'none';
+        } else {
+            alert(data);
+        }
+    });
+}
+</script>
+
+</body>
+</html>

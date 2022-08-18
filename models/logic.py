@@ -4,6 +4,18 @@ from dateutil.relativedelta import relativedelta, MO
 from dateutil import tz
 import db
 
+def update_todo(todo):
+    return db.update_todo(todo)
+
+def delete_todo(todo_id):
+    return db.delete_todo(todo_id)
+
+def add_todo(username, todo):
+    return db.add_todo(username, todo)
+
+def get_todolist(username):
+    return db.get_todolist(username)
+
 def update_note(note):
     return db.update_note(note)
 

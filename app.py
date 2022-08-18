@@ -43,6 +43,50 @@ def index():
     return render_template('index.html', categories=CATEGORIES)
 
 
+@app.route('/todolist', methods=['GET', 'POST'])
+def todolist():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    todos = logic.get_todolist(session['username'])
+    return render_template('todolist.html',
+            todos=todos,
+            categories=CATEGORIES)
+
+@app.route('/savetodo', methods=['POST'])
+def savetodo():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+    todo = {
+        'id': request.form.get('todo_id'),
+        'category': request.form.get('category'),
+        'content': request.form.get('content'),
+        'priority': request.form.get('priority'),
+        'status': request.form.get('status'),
+    }
+    if todo['id']:
+        if logic.update_todo(todo):
+            return '{"code": 0}'
+        else:
+            return '{"code": 1}'
+    else:
+        if logic.add_todo(session['username'], todo):
+            return '{"code": 0}'
+        else:
+            return '{"code": 1}'
+
+
+@app.route('/deletetodo', methods=['GET', 'POST'])
+def deletetodo():
+    if 'username' not in session or not request.args.get('todo_id'):
+        return '{"code": -1, "info": "param error"}'
+
+    if logic.delete_todo(request.args['todo_id']):
+        return '{"code": 0}'
+    else:
+        return '{"code": -1}'
+
+
 @app.route('/addworknote', methods=['GET', 'POST'])
 def addworknote():
     if 'username' not in session:

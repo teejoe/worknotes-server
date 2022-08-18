@@ -2,6 +2,7 @@
 
 import torndb
 import MySQLdb
+from datetime import datetime
 from utils.smartsql import QS, F, T, Condition
 from etc.config import DB_CONFIG
 
@@ -24,6 +25,7 @@ def update_note(note):
     ).update({
         'category': note['category'],
         'content': note['content'],
+        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
     })
     if not execute(sql, *params):
         return False
@@ -35,6 +37,7 @@ def add_note(username, note):
         'username': username,
         'category': note['category'],
         'content': note['content'],
+        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
     })
 
     if not execute(sql, *params):
@@ -51,22 +54,22 @@ def get_note(note_id):
         return None
     else:
         return notes[0]
-    
+
 
 def get_notes(username = None, start_time = None, end_time = None, category = None):
     cond = Condition('1 = 1')
     if username != None:
         cond &= (F.username == username)
     if start_time != None:
-        cond &= (F.time >= start_time)
+        cond &= (F.updatetime >= start_time)
     if end_time != None:
-        cond &= (F.time <= end_time)
+        cond &= (F.updatetime <= end_time)
     if category != None:
         cond &= (F.category == category)
 
     sql, params = QS(T.notebook).where(
         cond
-    ).order_by(F.time, desc=True).select()
+    ).order_by(F.updatetime, desc=True).select()
     return query(sql, *params)
 
 

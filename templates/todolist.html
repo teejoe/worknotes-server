@@ -35,7 +35,11 @@
     <td>{{ n.category }}</td>
     <td>{{ n.content }}</td>
     <td>{{ n.priority }}</td>
-    <td>{{ n.status }}</td>
+    {% if n.status in ["new", "inprogress"] %}
+    <td style="color:red">{{ n.status }}</td>
+    {% else %}
+    <td style="color:green">{{ n.status }}</td>
+    {% endif %}
     <td>{{ n.updatetime }}</td>
     <td>
       <button onclick="onModifytodo({{ n.id }}, '{{ n.category }}', '{{ n.content }}', {{ n.priority }}, '{{ n.status }}')" class="w3-blue">Modify</button>
@@ -143,6 +147,11 @@ function modifyTodo(form) {
             cells[1].innerHTML = form.content.value;
             cells[2].innerHTML = form.priority.value;
             cells[3].innerHTML = form.status.value;
+            if (["new", "inprogress"].includes(form.status.value)) {
+              cells[3].style.color = "red";
+            } else {
+              cells[3].style.color = "green";
+            }
             document.getElementById('modifydlg').style.display = 'none';
         } else {
             alert(data);

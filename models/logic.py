@@ -14,7 +14,15 @@ def add_todo(username, todo):
     return db.add_todo(username, todo)
 
 def get_todolist(username):
-    return db.get_todolist(username)
+    newlist = db.get_todolist(username, status="new")
+    progresslist = db.get_todolist(username, status="inprogress")
+    donelist = db.get_todolist(username, status="done")
+    abortlist = db.get_todolist(username, status="abort")
+    newlist.extend(progresslist)
+    newlist.extend(donelist)
+    newlist.extend(abortlist)
+    return newlist
+    #return db.get_todolist(username)
 
 def update_note(note):
     return db.update_note(note)

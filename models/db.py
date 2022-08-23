@@ -57,7 +57,7 @@ def get_todolist(username = None, category = None, status = None):
 
     sql, params = QS(T.todolist).where(
         cond
-    ).order_by(F.updatetime, desc=True).select()
+    ).order_by(F.priority).order_by(F.updatetime, desc=True).select()
     return query(sql, *params)
 
 

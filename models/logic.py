@@ -58,7 +58,7 @@ def search_notes(username, keyword):
     for note in notes:
         note['title'] = note['content'].partition('\n')[0]
         note['desc'] = '\n'.join(note['content'][:200].split('\n')[0:6])
-        note['time'] = note['updatetime'].replace(
+        note['time'] = note['time'].replace(
             tzinfo=tz.gettz('UTC')
         ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
     return notes

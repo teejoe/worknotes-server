@@ -21,6 +21,10 @@ def get_todolist(username):
     newlist.extend(progresslist)
     newlist.extend(donelist)
     newlist.extend(abortlist)
+    for todo in newlist:
+        todo['updatetime'] = todo['updatetime'].replace(
+             tzinfo=tz.gettz('UTC')
+             ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
     return newlist
     #return db.get_todolist(username)
 
@@ -54,7 +58,7 @@ def search_notes(username, keyword):
     for note in notes:
         note['title'] = note['content'].partition('\n')[0]
         note['desc'] = '\n'.join(note['content'][:200].split('\n')[0:6])
-        note['time'] = note['time'].replace(
+        note['time'] = note['updatetime'].replace(
             tzinfo=tz.gettz('UTC')
         ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
     return notes

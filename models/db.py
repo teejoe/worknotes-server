@@ -20,7 +20,7 @@ def update_todo(todo):
         'content': todo['content'],
         'status': todo['status'],
         'priority': todo['priority'],
-        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'updatetime': datetime.utcnow(),
     })
     if not execute(sql, *params):
         return False
@@ -34,7 +34,7 @@ def add_todo(username, todo):
         'content': todo['content'],
         'status': todo['status'],
         'priority': todo['priority'],
-        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'updatetime': datetime.utcnow(),
     })
     if not execute(sql, *params):
         return False
@@ -74,7 +74,7 @@ def update_note(note):
     ).update({
         'category': note['category'],
         'content': note['content'],
-        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'updatetime': datetime.utcnow(),
     })
     if not execute(sql, *params):
         return False
@@ -86,7 +86,7 @@ def add_note(username, note):
         'username': username,
         'category': note['category'],
         'content': note['content'],
-        'updatetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'updatetime': datetime.utcnow(),
     })
 
     if not execute(sql, *params):

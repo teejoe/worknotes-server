@@ -158,6 +158,7 @@ def update_worknote(note):
     ).update({
         'category': note['category'],
         'content': note['content'],
+        'detail': note['detail'],
         'cost': note['cost']
     })
     if not execute(sql, *params):
@@ -170,6 +171,7 @@ def add_worknote(username, note):
         'username': username,
         'category': note['category'],
         'content': note['content'],
+        'detail': note['detail'],
         'cost': note['cost']
     })
 

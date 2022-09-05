@@ -33,6 +33,7 @@
   <tr w3-blue>
     <th>category</th>
     <th>content</th>
+    <th>detail</th>
     <th>cost(day)</th>
     <th>time</th>
     <th>manage</th>
@@ -41,10 +42,11 @@
   <tr id="note{{ n.id }}">
     <td>{{ n.category }}</td>
     <td>{{ n.content }}</td>
+    <td>{{ n.detail }}</td>
     <td>{{ n.cost }}</td>
     <td>{{ n.time }}</td>
     <td>
-        <button onclick="onModifynote({{ n.id }}, '{{ n.category }}', '{{ n.content }}', {{ n.cost }})" class="w3-blue">Modify</button>
+      <button onclick="onModifynote({{ n.id }})" class="w3-blue">Modify</button>
       <button onclick="deleteworknote({{ n.id }})" class="w3-red">Delete</button>
     </td>
   </tr>
@@ -70,6 +72,9 @@
           <label>Content</label></p>
           <input id="modifycontent" name="content" class="w3-input" type="text">
           <p>
+          <label>Detail</label></p>
+          <textarea id="modifydetail" name="detail" class="w3-input w3-border" type="text" style="height:150px"></textarea>
+          <p>
           <label>Time cost(day)</label></p>
           <input id="modifycost" name="cost" value="1" class="w3-input" type="number" step="0.01" min="0">
           <p>     
@@ -88,10 +93,16 @@ document.getElementById(`searchbox`).addEventListener("keyup", function(event) {
         document.getElementById(`searchbtn`).click();
     }
 });
-function onModifynote(noteId, category, content, cost) {
+function onModifynote(noteId) {
+    var cells = document.getElementById(`note${noteId}`).cells;
+    var content = cells[1].innerHTML;
+    var detail = cells[2].innerHTML;
+    var cost = cells[3].innerHTML;
+
     document.getElementById('modifydlg').style.display = 'block';
     document.getElementById('modifyid').value = noteId;
     document.getElementById('modifycontent').value = content;
+    document.getElementById('modifydetail').value = detail;
     document.getElementById('modifycost').value = cost;
     var index = 0;
     {% for c in categories %}
@@ -108,6 +119,7 @@ function modifyNote(form) {
         note_id: noteId,
         category: form.category.value,
         content: form.content.value,
+        detail: form.detail.value,
         cost: form.cost.value
     };
     $.post('/modifyworknote', data, function(data) {
@@ -115,7 +127,8 @@ function modifyNote(form) {
             var cells = document.getElementById(`note${noteId}`).cells;
             cells[0].innerHTML = form.category.value;
             cells[1].innerHTML = form.content.value;
-            cells[2].innerHTML = form.cost.value;
+            cells[2].innerHTML = form.detail.value;
+            cells[3].innerHTML = form.cost.value;
             document.getElementById('modifydlg').style.display = 'none';
         } else {
             alert(data);

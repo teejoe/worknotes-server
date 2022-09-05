@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `worknotes` (
   `username` varchar(50) DEFAULT NULL,
   `category` varchar(50) DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL,
+  `detail` MEDIUMTEXT DEFAULT NULL,
   `cost` decimal(4,2) DEFAULT 0,
   `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

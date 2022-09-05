@@ -95,6 +95,7 @@ def addworknote():
     note = {}
     note['category'] = request.form['category']
     note['content'] = request.form['content']
+    note['detail'] = request.form['detail']
     note['cost'] = float(request.form['cost'])
     logic.add_user_worknote(session['username'], note)
     return redirect(url_for('index'))
@@ -186,6 +187,7 @@ def modifyworknote():
         'id': request.form['note_id'],
         'category': request.form['category'],
         'content': request.form['content'],
+        'detail': request.form['detail'],
         'cost': request.form['cost'],
     }
     if logic.update_worknote(note):
@@ -210,7 +212,8 @@ def weeklyreport():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    return logic.get_weekly_report(session['username'])
+    #return logic.get_weekly_report(session['username'])
+    return render_template('textpreview.html', text=logic.get_weekly_report(session['username']))
 
 
 @app.route('/monthlyreport', methods=['GET', 'POST'])

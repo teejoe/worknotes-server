@@ -81,6 +81,8 @@ def get_all_worknotes(username):
     start_time = end_time - timedelta(days=60)
     notes = db.get_worknotes(username, start_time, end_time)
     for note in notes:
+        if not note['detail']:
+            note['detail'] = ''
         note['time'] = note['time'].replace(
             tzinfo=tz.gettz('UTC')
         ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
@@ -90,6 +92,8 @@ def get_all_worknotes(username):
 def search_work_notes(username, keyword):
     notes = db.search_worknotes(username, keyword)
     for note in notes:
+        if not note['detail']:
+            note['detail'] = ''
         note['time'] = note['time'].replace(
             tzinfo=tz.gettz('UTC')
         ).astimezone(tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S")
@@ -100,17 +104,21 @@ def get_weekly_report(username):
     start_time, end_time = get_last_week()
     notes = db.get_worknotes(username, start_time, end_time)
     notes = sorted(notes, key=lambda k: k['category'])
-    report = "%s ~ %s<br><br>" % (start_time, end_time)
+    report = "%s ~ %s\n\n" % (start_time, end_time)
     if len(notes) == 0:
         return report
 
     category = notes[0]['category']
-    report += "%s<br>================<br>" % category
+    report += "%s\n================\n" % category
     for n in notes:
         if category != n['category']:
             category = n['category']
-            report += "<br>%s<br>================<br>" % category
-        report += "+ %s<br>" % n['content']
+            report += "\n%s\n================\n" % category
+        report += "+ %s\n" % n['content']
+        items = [] if not n['detail'] else n['detail'].split('\n')
+        for item in items:
+            if item: report += "  -%s\n" % item
+        report += "\n"
 
     return report
 

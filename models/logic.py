@@ -117,7 +117,7 @@ def get_weekly_report(username):
         report += "+ %s\n" % n['content']
         items = [] if not n['detail'] else n['detail'].split('\n')
         for item in items:
-            if item: report += "  -%s\n" % item
+            if item: report += "  - %s\n" % item
         report += "\n"
 
     return report
@@ -141,20 +141,24 @@ def get_this_week_report(username):
 def get_work_report(username, start_time, end_time):
     notes = db.get_worknotes(username, start_time, end_time)
     notes = sorted(notes, key=lambda k: k['category'])
-    report = u"%s ~ %s<br><br>" % (start_time, end_time)
+    report = u"%s ~ %s\n\n" % (start_time, end_time)
     if len(notes) == 0:
         return report
 
     category = notes[0]['category']
-    report += u"%s<br>================<br>" % category
+    report += u"%s\n================\n" % category
     total_cost = 0
     for n in notes:
         if category != n['category']:
             category = n['category']
-            report += u"<br>%s<br>================<br>" % category
-        report += u"+ %s (%g天)<br>" % (n['content'], n['cost'])
+            report += u"\n%s\n================\n" % category
+        report += u"+ %s (%g天)\n" % (n['content'], n['cost'])
+        items = [] if not n['detail'] else n['detail'].split('\n')
+        for item in items:
+            if item: report += "  - %s\n" % item
         total_cost += n['cost']
-    report += u"<br>总计: %g 天<br>" % total_cost
+        report += "\n"
+    report += u"\n总计: %g 天" % total_cost
     return report
 
 

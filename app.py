@@ -212,7 +212,6 @@ def weeklyreport():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    #return logic.get_weekly_report(session['username'])
     return render_template('textpreview.html', text=logic.get_weekly_report(session['username']))
 
 
@@ -237,7 +236,7 @@ def thisweekreport():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    return logic.get_this_week_report(session['username'])
+    return render_template('textpreview.html', text=logic.get_this_week_report(session['username']))
 
 
 if __name__ == "__main__":

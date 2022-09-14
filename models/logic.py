@@ -135,10 +135,10 @@ def get_yearly_report(username):
 
 def get_this_week_report(username):
     start_time, end_time = get_this_week()
-    return get_work_report(username, start_time, end_time)
+    return get_work_report(username, start_time, end_time, True)
 
 
-def get_work_report(username, start_time, end_time):
+def get_work_report(username, start_time, end_time, showdetail=False):
     notes = db.get_worknotes(username, start_time, end_time)
     notes = sorted(notes, key=lambda k: k['category'])
     report = u"%s ~ %s\n\n" % (start_time, end_time)
@@ -149,15 +149,16 @@ def get_work_report(username, start_time, end_time):
     report += u"%s\n================\n" % category
     total_cost = 0
     for n in notes:
+        total_cost += n['cost']
         if category != n['category']:
             category = n['category']
             report += u"\n%s\n================\n" % category
         report += u"+ %s (%g天)\n" % (n['content'], n['cost'])
-        items = [] if not n['detail'] else n['detail'].split('\n')
-        for item in items:
-            if item: report += "  - %s\n" % item
-        total_cost += n['cost']
-        report += "\n"
+        if showdetail:
+            items = [] if not n['detail'] else n['detail'].split('\n')
+            for item in items:
+                if item: report += "  - %s\n" % item
+            report += "\n"
     report += u"\n总计: %g 天" % total_cost
     return report
 

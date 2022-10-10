@@ -143,7 +143,6 @@ def editnote():
     }
     if note_id is not None:
         note = logic.get_note(int(note_id))
-    print note
     return render_template('editnote.html', note=note, categories=NOTEBOOK_CATEGORY)
 
 

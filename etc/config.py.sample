@@ -3,17 +3,26 @@
 SECRET_KEY = b'_5#y2L"F5Q8z\n\xec]/'
 
 AUTH_USERS = [
-        {'username': 'admin', 'password': '123'},
+        {'username': 'mtj', 'password': '12345'},
 ]
 
 DB_CONFIG = {
         'host': 'localhost',
-        'db_name': 'test',
-        'user': 'tester',
-        'password': 'test12345'
+        'db_name': 'private_server',
+        'user': 'm2x',
+        'password': 'm2x12345'
 }
 
 CATEGORIES = [
+        u'云游戏',
         u'黑猪电竞Android端',
-        u'黑猪电竞服务端'
+        u'黑猪电竞服务端',
+        u'其他',
+]
+
+NOTEBOOK_CATEGORY = [
+        u'技术',
+        u'剪贴板',
+        u'随笔',
+        u'工作',
 ]

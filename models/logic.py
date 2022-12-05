@@ -118,14 +118,14 @@ def get_weekly_report(username):
         items = [] if not n['detail'] else n['detail'].split('\n')
         for item in items:
             if item: report += "  - %s\n" % item
-        report += "\n"
+        #report += "\n"
 
     return report
 
 
 def get_monthly_report(username):
     start_time, end_time = get_last_month()
-    return get_work_report(username, start_time, end_time)
+    return get_work_report(username, start_time, end_time, True)
 
 
 def get_yearly_report(username):
@@ -158,7 +158,7 @@ def get_work_report(username, start_time, end_time, showdetail=False):
             items = [] if not n['detail'] else n['detail'].split('\n')
             for item in items:
                 if item: report += "  - %s\n" % item
-            report += "\n"
+            #report += "\n"
     report += u"\n总计: %g 天" % total_cost
     return report
 
